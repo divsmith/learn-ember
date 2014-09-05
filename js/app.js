@@ -7,12 +7,6 @@ App.Post = DS.Model.extend({
 	favorite: DS.attr('boolean')
 });
 
-App.Person = Ember.Object.extend({
-	helloWorld: function() {
-		alert('Hi, my name is ' + this.get('name'));
-	}
-});
-
 App.Post.FIXTURES = [
 	{
 		id: 1,
@@ -34,12 +28,50 @@ App.Post.FIXTURES = [
 	}
 ];
 
+App.Person = Ember.Object.extend({
+	firstName: null,
+	lastName: null,
+	age: null,
+	country: null,
+
+	fullName: function(key, value, previousValue) {
+		// setter
+		if( arguments.length > 1 ) {
+			var nameParts = value.split(/\s+/);
+			this.set('firstName', nameParts[0]);
+			this.set('lastName', nameParts[1]);
+		}
+
+		// getter
+		return this.get('firstName') + ' ' + this.get('lastName');
+	}.property('firstName', 'lastName'),
+
+	description: function() {
+		return this.get('fullName') + '; Age: ' + this.get('age') + '; Country: ' + this.get('country')
+	}.property('fullName', 'age', 'country')
+});
+
+var captain = App.Person.create({
+	firstName: 'Steve',
+	lastName: 'Rogers',
+	age: 80,
+	country: 'USA'
+});
+
 App.Router.map(function() {
 	this.resource('posts', function() {
 		this.route('index', { path: '/' });
 		this.route('favorites');
 		this.resource('post', { path: '/:post_id' });
 	});
+
+	this.resource('captain', { path: '/captain' })
+});
+
+App.CaptainRoute = Ember.Route.extend({
+	model: function() {
+		return captain;
+	}
 });
 
 App.ApplicationRoute = Ember.Route.extend({
