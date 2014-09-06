@@ -54,7 +54,7 @@ App.Person = Ember.Object.extend({
 var captain = App.Person.create({
 	firstName: 'Steve',
 	lastName: 'Rogers',
-	age: 80,
+	age: 82,
 	country: 'USA'
 });
 
@@ -65,8 +65,23 @@ App.Router.map(function() {
 		this.resource('post', { path: '/:post_id' });
 	});
 
-	this.resource('captain', { path: '/captain' })
+	this.resource('captain', { path: '/captain' });
 });
+
+App.TodosController = Ember.Controller.extend({
+    todos: [
+        Ember.Object.create({ isDone: true }),
+        Ember.Object.create({ isDone: false }),
+        Ember.Object.create({ isDone: true })
+    ],
+    
+    remaining: function() {
+        var todos = this.get('todos');
+        return todos.filterBy('isDone', false).get('length');
+    }.property('todos.@each.isDone')
+});
+
+todoc = App.TodosController.create();
 
 App.CaptainRoute = Ember.Route.extend({
 	model: function() {
