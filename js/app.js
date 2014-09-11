@@ -1,28 +1,18 @@
 App = Ember.Application.create();
 App.ApplicationAdapter = DS.FixtureAdapter.extend();
 
-App.Person = Ember.Object.extend({
-    firstName: null,
-    lastName: null,
-    
-    fullName: function() {
-        var firstName = this.get('firstName');
-        var lastName = this.get('lastName');
-        
-        return firstName + ' ' + lastName;
-    }.property('firstName', 'lastName'),    
-    
-    fullNameChanged: function() {
-        console.log('Full name changed to ' + this.get('firstName') + ' ' + this.get('lastName'));
-    }.observes('fullName')
+user = Ember.Object.create({
+    fullName: 'Kara Gates'
 });
 
-var person = App.Person.create({
-    firstName: 'Parker',
-    lastName: 'Smith'
+userView = Ember.View.create({
+   user: user,
+    userName: Ember.computed.oneWay('user.fullName')
 });
 
-person.get('fullName');
+user.set('fullName', 'Krang Gates');
+
+userView.set('userName', 'truckasaurus');
 
 App.Router.map(function() {
 	
